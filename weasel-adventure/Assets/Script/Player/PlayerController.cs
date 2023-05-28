@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
 
+    public Animator animj;
+
     public float speed;
     public float jumpfore;
     // Start is called before the first frame update
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
         if(horizontalMove != 0)
         {
             rb.velocity = new Vector2(horizontalMove * speed*Time.deltaTime, rb.velocity.y);
+            animj.SetFloat("run",Mathf.Abs(facedirection));
         }
         if(facedirection != 0)
         {
