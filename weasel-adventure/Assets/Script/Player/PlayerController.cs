@@ -8,8 +8,13 @@ public class PlayerController : MonoBehaviour
 
     public Animator animj;
 
+    public Collider2D coll;
+
+    public LayerMask ground;
+
     public float speed;
     public float jumpfore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +25,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Movement();
+        SwitchAnim();
     }
 
     void Movement()
@@ -39,6 +45,24 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
+            animj.SetBool("jump", true);
+        }
+    }
+    void SwitchAnim()
+    {
+        animj.SetBool("idle", false);
+
+        if (animj.GetBool("jump"))
+        {
+            if(rb.velocity.y < 0)
+            {
+                animj.SetBool("jump", false);
+                animj.SetBool("fall", true);
+            }
+        }else if (coll.IsTouchingLayers(ground))
+        {
+            animj.SetBool("fall", false);
+            animj.SetBool("idle", true);
         }
     }
 }
