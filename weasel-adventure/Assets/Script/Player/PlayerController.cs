@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
 
-    public Animator animj;
+    private Animator animj;
 
     public Collider2D coll;
 
@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
+        animj = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
         if(horizontalMove != 0)
         {
             rb.velocity = new Vector2(horizontalMove * speed*Time.deltaTime, rb.velocity.y);
-            animj.SetFloat("run",Mathf.Abs(facedirection));
+            animj.SetFloat("runing",Mathf.Abs(facedirection));
         }
         if(facedirection != 0)
         {
@@ -45,23 +46,23 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
-            animj.SetBool("jump", true);
+            animj.SetBool("jumping", true);
         }
     }
     void SwitchAnim()
     {
         animj.SetBool("idle", false);
 
-        if (animj.GetBool("jump"))
+        if (animj.GetBool("jumping"))
         {
             if(rb.velocity.y < 0)
             {
-                animj.SetBool("jump", false);
-                animj.SetBool("fall", true);
+                animj.SetBool("jumping", false);
+                animj.SetBool("falling", true);
             }
         }else if (coll.IsTouchingLayers(ground))
-        {
-            animj.SetBool("fall", false);
+        {   
+            animj.SetBool("falling", false);
             animj.SetBool("idle", true);
         }
     }
