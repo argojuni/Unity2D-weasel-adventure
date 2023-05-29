@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,14 +13,23 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask ground;
 
+    public GameObject explosionEffect; // Prefab efek ledakan
+
+    public Text cherryText;
+
     public float speed;
     public float jumpfore;
+
+    public int cherry;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        
         animj = GetComponent<Animator>();
+
+        cherryText.text = "Cherry: " + cherry.ToString();
     }
 
     // Update is called once per frame
@@ -64,6 +74,21 @@ public class PlayerController : MonoBehaviour
         {   
             animj.SetBool("falling", false);
             animj.SetBool("idle", true);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.tag == "Collection")
+        {
+            GameObject eksplosion = Instantiate(explosionEffect, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
+            
+            Destroy(eksplosion, 0.5f);
+            Destroy(col.gameObject);
+            
+            cherry += 1;
+            
+            cherryText.text = "Cherry: " + cherry.ToString();
         }
     }
 }
