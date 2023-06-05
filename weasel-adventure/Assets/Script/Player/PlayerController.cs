@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 
     public GameObject explosionEffect; // Prefab efek ledakan
 
+    public GameObject enemyDeath; // Prefab efek ledakan
+
     public Text cherryText;
 
     public float speed;
@@ -89,6 +91,24 @@ public class PlayerController : MonoBehaviour
             cherry += 1;
             
             cherryText.text = "Cherry: " + cherry.ToString();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (animj.GetBool("falling"))
+        {
+            if(collision.gameObject.tag == "Enemy")
+            {
+                GameObject enemyDeatheffect = Instantiate(enemyDeath, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
+
+                Destroy(enemyDeatheffect, 0.5f);
+
+                Destroy(collision.gameObject);
+
+                rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
+                animj.SetBool("jumping", true);
+            }
         }
     }
 }
