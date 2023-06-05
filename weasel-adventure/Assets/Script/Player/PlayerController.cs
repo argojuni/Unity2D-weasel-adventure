@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     public int cherry;
 
+    private bool isHurt;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +38,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Movement();
+        if (!isHurt)
+        {
+            Movement();
+        }
+
         SwitchAnim();
     }
 
@@ -72,7 +77,19 @@ public class PlayerController : MonoBehaviour
                 animj.SetBool("jumping", false);
                 animj.SetBool("falling", true);
             }
-        }else if (coll.IsTouchingLayers(ground))
+        }else if (isHurt)
+        {
+            animj.SetBool("hurt",true);
+            animj.SetFloat("running", 0);
+
+            if (Mathf.Abs(rb.velocity.x) < 0.1f)
+            {
+                animj.SetBool("hurt",false);
+                animj.SetBool("idle", true);
+                isHurt = false;
+            }
+        }
+        else if (coll.IsTouchingLayers(ground))
         {   
             animj.SetBool("falling", false);
             animj.SetBool("idle", true);
@@ -95,10 +112,10 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (animj.GetBool("falling"))
-        {
-            if(collision.gameObject.tag == "Enemy")
+    {        
+       if(collision.gameObject.tag == "Enemy")
+       {
+            if (animj.GetBool("falling"))
             {
                 GameObject enemyDeatheffect = Instantiate(enemyDeath, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
 
@@ -108,6 +125,15 @@ public class PlayerController : MonoBehaviour
 
                 rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
                 animj.SetBool("jumping", true);
+            }else if(transform.position.x < collision.gameObject.transform.position.x)
+            {
+                rb.velocity = new Vector2(-5, rb.velocity.y);
+                isHurt = true;
+            }
+            else if (transform.position.x > collision.gameObject.transform.position.x)
+            {
+                rb.velocity = new Vector2(5, rb.velocity.y);
+                isHurt = true;
             }
         }
     }
