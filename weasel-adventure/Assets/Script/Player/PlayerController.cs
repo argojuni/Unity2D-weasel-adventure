@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector3(facedirection, 1, 1);
         }
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump")&&coll.IsTouchingLayers(ground))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
             animj.SetBool("jumping", true);
