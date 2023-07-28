@@ -70,6 +70,11 @@ public class PlayerController : MonoBehaviour
     {
         animj.SetBool("idle", false);
 
+        if (rb.velocity.y < 0.1f && !coll.IsTouchingLayers(ground))
+        {
+            animj.SetBool("falling", true);
+        }
+
         if (animj.GetBool("jumping"))
         {
             if(rb.velocity.y < 0)
