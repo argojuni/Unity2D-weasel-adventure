@@ -62,7 +62,14 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Jump")&&coll.IsTouchingLayers(ground))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
+            if(horizontalMove != 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, speed * Time.deltaTime);
+            }
+            else
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
+            }
             animj.SetBool("jumping", true);
         }
     }

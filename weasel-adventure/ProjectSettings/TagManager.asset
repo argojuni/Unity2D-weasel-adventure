@@ -65,3 +65,6 @@ TagManager:
   - name: Ground
     uniqueID: 2234987825
     locked: 0
+  - name: Cave
+    uniqueID: 717651763
+    locked: 0

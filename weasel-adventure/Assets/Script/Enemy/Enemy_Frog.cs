@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class Enemy_Frog : MonoBehaviour
+public class Enemy_Frog : Enemy
 {
     private Rigidbody2D rb;
 
-    private Animator anim;
+    //private Animator anim;
 
     private Collider2D Coll;
 
@@ -18,11 +18,13 @@ public class Enemy_Frog : MonoBehaviour
     private bool faceLeft = true;
     private bool isMoving = true;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         rb = GetComponent<Rigidbody2D>();
     
-        anim = GetComponent<Animator>();
+        //anim = GetComponent<Animator>();
 
         Coll = GetComponent<Collider2D>();
 
