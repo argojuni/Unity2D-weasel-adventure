@@ -9,28 +9,37 @@ public class PlayerController : MonoBehaviour
 
     private Animator animj;
 
+    public AudioClip jumpAudio;
+    public AudioClip GameOverAudio;
+    public AudioClip CherryAudio;
+
+    public AudioSource audioSource;
+
     public Collider2D coll;
 
     public LayerMask ground;
 
     public GameObject explosionEffect; // Prefab efek ledakan
 
-    public GameObject enemyDeath; // Prefab efek ledakan
+    //public GameObject enemyDeath; // Prefab efek ledakan
 
     public Text cherryText;
 
     public float speed;
-    public float jumpfore;
+    public float Jumpforce;
 
     public int cherry;
 
     private bool isHurt;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         
         animj = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
 
         cherryText.text = "Cherry: " + cherry.ToString();
     }
@@ -68,8 +77,10 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
+                rb.velocity = new Vector2(rb.velocity.x, Jumpforce * Time.deltaTime);
             }
+            audioSource.clip = jumpAudio;
+            audioSource.Play();
             animj.SetBool("jumping", true);
         }
     }
@@ -113,7 +124,10 @@ public class PlayerController : MonoBehaviour
         if (col.tag == "Collection")
         {
             GameObject eksplosion = Instantiate(explosionEffect, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
-            
+
+            audioSource.clip = CherryAudio;
+            audioSource.Play();
+
             Destroy(eksplosion, 0.5f);
             Destroy(col.gameObject);
             
@@ -127,25 +141,32 @@ public class PlayerController : MonoBehaviour
     {        
        if(collision.gameObject.tag == "Enemy")
        {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (animj.GetBool("falling"))
             {
-                GameObject enemyDeatheffect = Instantiate(enemyDeath, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
+                //GameObject enemyDeatheffect = Instantiate(enemyDeath, coll.transform.position, Quaternion.identity); // Membuat efek ledakan
 
-                Destroy(enemyDeatheffect, 0.5f);
+                //Destroy(enemyDeatheffect, 0.5f);
+                enemy.JumpOn();
 
-                Destroy(collision.gameObject);
+                rb.velocity = new Vector2(rb.velocity.x, Jumpforce * Time.deltaTime);
 
-                rb.velocity = new Vector2(rb.velocity.x, jumpfore * Time.deltaTime);
                 animj.SetBool("jumping", true);
             }else if(transform.position.x < collision.gameObject.transform.position.x)
             {
                 rb.velocity = new Vector2(-5, rb.velocity.y);
                 isHurt = true;
+                audioSource.clip = GameOverAudio;
+                audioSource.Play();
+                animj.SetFloat("runing", 0);
             }
             else if (transform.position.x > collision.gameObject.transform.position.x)
             {
                 rb.velocity = new Vector2(5, rb.velocity.y);
                 isHurt = true;
+                audioSource.clip = GameOverAudio;
+                audioSource.Play();
+                animj.SetFloat("runing", 0);
             }
         }
     }
